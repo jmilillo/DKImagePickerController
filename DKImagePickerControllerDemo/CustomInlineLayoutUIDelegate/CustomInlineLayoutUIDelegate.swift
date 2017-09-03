@@ -8,9 +8,9 @@
 
 import UIKit
 
-open class CustomInlineLayoutUIDelegate: DKImagePickerControllerDefaultUIDelegate {
+public class CustomInlineLayoutUIDelegate: DKImagePickerControllerDefaultUIDelegate {
     
-    override open func layoutForImagePickerController(_ imagePickerController: DKImagePickerController) -> UICollectionViewLayout.Type {
+    override public func layoutForImagePickerController(imagePickerController: DKImagePickerController) -> UICollectionViewLayout.Type {
         return CustomInlineFlowLayout.self
     }
     

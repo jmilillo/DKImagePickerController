@@ -18,11 +18,11 @@ class CustomGroupDetailImageCell: DKAssetGroupDetailBaseCell {
         super.init(frame: frame)
         
         self.thumbnailImageView.frame = self.bounds
-        self.thumbnailImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.thumbnailImageView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         self.contentView.addSubview(self.thumbnailImageView)
         
         self.checkView.frame = self.bounds
-        self.checkView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.checkView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         self.contentView.addSubview(self.checkView)
     }
     
@@ -36,29 +36,29 @@ class CustomGroupDetailImageCell: DKAssetGroupDetailBaseCell {
         }
     }
 
-    fileprivate lazy var thumbnailImageView: UIImageView = {
+    lazy var thumbnailImageView: UIImageView = {
         let thumbnailImageView = UIImageView()
-        thumbnailImageView.contentMode = .scaleAspectFill
+        thumbnailImageView.contentMode = .ScaleAspectFill
         thumbnailImageView.clipsToBounds = true
         
         return thumbnailImageView
     }()
     
-    fileprivate lazy var checkView: UIImageView = {
+    lazy var checkView: UIImageView = {
         let checkView = UIImageView(image: DKImageResource.blueTickImage())
-        checkView.contentMode = .center
+        checkView.contentMode = .Center
         
         return checkView
     }()
 
-    override var isSelected: Bool {
+    override var selected: Bool {
         didSet {
-            if super.isSelected {
+            if super.selected {
                 self.thumbnailImageView.alpha = 0.5
-                self.checkView.isHidden = false
+                self.checkView.hidden = false
             } else {
                 self.thumbnailImageView.alpha = 1
-                self.checkView.isHidden = true
+                self.checkView.hidden = true
             }
         }
     }

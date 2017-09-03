@@ -43,9 +43,9 @@ class DKAssetGroupDetailVideoCell: DKAssetGroupDetailImageCell {
         }
     }
     
-    override var isSelected: Bool {
+    override var selected: Bool {
         didSet {
-            if super.isSelected {
+            if super.selected {
                 self.videoInfoView.backgroundColor = UIColor(red: 20 / 255, green: 129 / 255, blue: 252 / 255, alpha: 1)
             } else {
                 self.videoInfoView.backgroundColor = UIColor(white: 0.0, alpha: 0.7)
@@ -53,22 +53,22 @@ class DKAssetGroupDetailVideoCell: DKAssetGroupDetailImageCell {
         }
     }
     
-    fileprivate lazy var videoInfoView: UIView = {
+    lazy var videoInfoView: UIView = {
         let videoInfoView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 0))
         
         let videoImageView = UIImageView(image: DKImageResource.videoCameraIcon())
         videoInfoView.addSubview(videoImageView)
         videoImageView.center = CGPoint(x: videoImageView.bounds.width / 2 + 7, y: videoInfoView.bounds.height / 2)
-        videoImageView.autoresizingMask = [.flexibleBottomMargin, .flexibleTopMargin]
+        videoImageView.autoresizingMask = [.FlexibleBottomMargin, .FlexibleTopMargin]
         
         let videoDurationLabel = UILabel()
         videoDurationLabel.tag = -1
-        videoDurationLabel.textAlignment = .right
-        videoDurationLabel.font = UIFont.systemFont(ofSize: 12)
-        videoDurationLabel.textColor = UIColor.white
+        videoDurationLabel.textAlignment = .Right
+        videoDurationLabel.font = UIFont.systemFontOfSize(12)
+        videoDurationLabel.textColor = UIColor.whiteColor()
         videoInfoView.addSubview(videoDurationLabel)
         videoDurationLabel.frame = CGRect(x: 0, y: 0, width: videoInfoView.bounds.width - 7, height: videoInfoView.bounds.height)
-        videoDurationLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        videoDurationLabel.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         
         return videoInfoView
     }()

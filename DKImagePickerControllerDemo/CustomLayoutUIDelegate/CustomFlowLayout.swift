@@ -8,12 +8,12 @@
 
 import UIKit
 
-open class CustomFlowLayout: UICollectionViewFlowLayout {
+public class CustomFlowLayout: UICollectionViewFlowLayout {
     
-    open override func prepare() {
-        super.prepare()
+    public override func prepareLayout() {
+        super.prepareLayout()
         
-        self.scrollDirection = .horizontal
+        self.scrollDirection = .Horizontal
         
         let contentWidth = self.collectionView!.bounds.width * 0.7
         self.itemSize = CGSize(width: contentWidth, height: contentWidth)

@@ -8,9 +8,9 @@
 
 import UIKit
 
-open class CustomCameraUIDelegate: DKImagePickerControllerDefaultUIDelegate {
+public class CustomCameraUIDelegate: DKImagePickerControllerDefaultUIDelegate {
 	
-    open override func imagePickerControllerCreateCamera(_ imagePickerController: DKImagePickerController) -> UIViewController {
+    public override func imagePickerControllerCreateCamera(imagePickerController: DKImagePickerController) -> UIViewController {
         let picker = CustomCamera()
         
         return picker

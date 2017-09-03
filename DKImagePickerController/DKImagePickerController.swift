@@ -13,11 +13,11 @@ import AssetsLibrary
 @objc
 public protocol DKImagePickerControllerCameraProtocol {
     
-    func setDidCancel(block: @escaping () -> Void) -> Void
+    func setDKImagePickerControllerCameraDidCancel(block: () -> Void) -> Void
     
-    func setDidFinishCapturingImage(block: @escaping (_ image: UIImage?, _ data: Data?) -> Void) -> Void
+    func setDKImagePickerControllerCameraDidFinishCapturingImage(block: (image: UIImage?, data: NSData?) -> Void) -> Void
     
-    func setDidFinishCapturingVideo(block: @escaping (_ videoURL: URL) -> Void) -> Void
+    func setDKImagePickerControllerCameraDidFinishCapturingVideo(block: (videoURL: NSURL) -> Void) -> Void
 }
 
 @objc
@@ -26,7 +26,7 @@ public protocol DKImagePickerControllerUIDelegate {
     /**
      The picker calls -prepareLayout once at its first layout as the first message to the UIDelegate instance.
      */
-    func prepareLayout(_ imagePickerController: DKImagePickerController, vc: UIViewController)
+    func prepareLayout(imagePickerController: DKImagePickerController, vc: UIViewController)
     
     /**
      Returns a custom camera.
@@ -43,42 +43,42 @@ public protocol DKImagePickerControllerUIDelegate {
      - Parameter imagePickerController: DKImagePickerController
      - Returns: The returned `UIViewControlelr` must conform to the `DKImagePickerControllerCameraProtocol`.
      */
-    func imagePickerControllerCreateCamera(_ imagePickerController: DKImagePickerController) -> UIViewController
+    func imagePickerControllerCreateCamera(imagePickerController: DKImagePickerController) -> UIViewController
         
     /**
      The layout is to provide information about the position and visual state of items in the collection view.
      */
-    func layoutForImagePickerController(_ imagePickerController: DKImagePickerController) -> UICollectionViewLayout.Type
+    func layoutForImagePickerController(imagePickerController: DKImagePickerController) -> UICollectionViewLayout.Type
     
     /**
      Called when the user needs to show the cancel button.
      */
-    func imagePickerController(_ imagePickerController: DKImagePickerController, showsCancelButtonForVC vc: UIViewController)
+    func imagePickerController(imagePickerController: DKImagePickerController, showsCancelButtonForVC vc: UIViewController)
     
     /**
      Called when the user needs to hide the cancel button.
      */
-    func imagePickerController(_ imagePickerController: DKImagePickerController, hidesCancelButtonForVC vc: UIViewController)
+    func imagePickerController(imagePickerController: DKImagePickerController, hidesCancelButtonForVC vc: UIViewController)
     
     /**
      Called after the user changes the selection.
      */
-    func imagePickerController(_ imagePickerController: DKImagePickerController, didSelectAssets: [DKAsset])
+    func imagePickerController(imagePickerController: DKImagePickerController, didSelectAssets: [DKAsset])
     
     /**
      Called after the user changes the selection.
      */
-    func imagePickerController(_ imagePickerController: DKImagePickerController, didDeselectAssets: [DKAsset])
+    func imagePickerController(imagePickerController: DKImagePickerController, didDeselectAssets: [DKAsset])
     
     /**
      Called when the count of the selectedAssets did reach `maxSelectableCount`.
      */
-    func imagePickerControllerDidReachMaxLimit(_ imagePickerController: DKImagePickerController)
+    func imagePickerControllerDidReachMaxLimit(imagePickerController: DKImagePickerController)
     
     /**
      Accessory view below content. default is nil.
      */
-    func imagePickerControllerFooterView(_ imagePickerController: DKImagePickerController) -> UIView?
+    func imagePickerControllerFooterView(imagePickerController: DKImagePickerController) -> UIView?
     
     /**
      Set the color of the background of the collection view.
@@ -112,7 +112,7 @@ public enum DKImagePickerControllerSourceType : Int {
 /**
  * The `DKImagePickerController` class offers the all public APIs which will affect the UI.
  */
-open class DKImagePickerController : UINavigationController {
+public class DKImagePickerController : UINavigationController {
     
     lazy public var UIDelegate: DKImagePickerControllerUIDelegate = {
         return DKImagePickerControllerDefaultUIDelegate()
@@ -140,9 +140,9 @@ open class DKImagePickerController : UINavigationController {
     
     /// The types of PHAssetCollection to display in the picker.
     public var assetGroupTypes: [PHAssetCollectionSubtype] = [
-        .smartAlbumUserLibrary,
-        .smartAlbumFavorites,
-        .albumRegular
+        .SmartAlbumUserLibrary,
+        .SmartAlbumFavorites,
+        .AlbumRegular
         ] {
         willSet(newTypes) {
             getImageManager().groupDataManager.assetGroupTypes = newTypes
@@ -156,7 +156,7 @@ open class DKImagePickerController : UINavigationController {
         }
     }
     
-    public var assetFilter: ((_ asset: PHAsset) -> Bool)? {
+    public var assetFilter: ((asset: PHAsset) -> Bool)? {
         didSet {
             getImageManager().groupDataManager.assetFilter = self.assetFilter
         }
@@ -216,7 +216,7 @@ open class DKImagePickerController : UINavigationController {
     }
     
     /// The callback block is executed when user pressed the select button.
-    public var didSelectAssets: ((_ assets: [DKAsset]) -> Void)?
+    public var didSelectAssets: ((assets: [DKAsset]) -> Void)?
     
     public var selectedChanged: (() -> Void)?
     
@@ -235,7 +235,7 @@ open class DKImagePickerController : UINavigationController {
         }
     }
     
-    open private(set) var selectedAssets = [DKAsset]()
+    public private(set) var selectedAssets = [DKAsset]()
     
     static private var imagePickerControllerReferenceCount = 0
     public convenience init() {
@@ -255,7 +255,7 @@ open class DKImagePickerController : UINavigationController {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
         
         DKImagePickerController.imagePickerControllerReferenceCount -= 1
         if DKImagePickerController.imagePickerControllerReferenceCount == 0 {
@@ -264,22 +264,22 @@ open class DKImagePickerController : UINavigationController {
     }
     
     private var hasInitialized = false
-    override open func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         if !hasInitialized {
             hasInitialized = true
             
             if self.inline || self.sourceType == .camera {
-                self.isNavigationBarHidden = true
+                self.navigationBarHidden = true
             } else {
-                self.isNavigationBarHidden = false
+                self.navigationBarHidden = false
             }
             
             if self.sourceType == .camera {
                 let camera = self.createCamera()
                 if camera is UINavigationController {
-                    self.presentCamera(camera: camera)
+                    self.presentCamera(camera)
                     self.setViewControllers([], animated: false)
                 } else {
                     self.setViewControllers([camera], animated: false)
@@ -291,7 +291,7 @@ open class DKImagePickerController : UINavigationController {
                 self.UIDelegate.prepareLayout(self, vc: rootVC)
                 self.updateCancelButtonForVC(rootVC)
                 self.setViewControllers([rootVC], animated: false)
-                if let count = self.defaultSelectedAssets?.count, count > 0 {
+                if let count = self.defaultSelectedAssets?.count where count > 0 {
                     self.UIDelegate.imagePickerController(self, didSelectAssets: [self.defaultSelectedAssets!.last!])
                 }
             }
@@ -303,13 +303,13 @@ open class DKImagePickerController : UINavigationController {
         return assetFetchOptions
     }()
   
-    open func makeRootVC() -> DKAssetGroupDetailVC {
+    public func makeRootVC() -> DKAssetGroupDetailVC {
       return DKAssetGroupDetailVC()
     }
     
     private func createAssetFetchOptions() -> PHFetchOptions? {
         let createImagePredicate = { () -> NSPredicate in
-            var imagePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+            var imagePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.Image.rawValue)
             if let imageFetchPredicate = self.imageFetchPredicate {
                 imagePredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [imagePredicate, imageFetchPredicate])
             }
@@ -318,7 +318,7 @@ open class DKImagePickerController : UINavigationController {
         }
         
         let createVideoPredicate = { () -> NSPredicate in
-            var videoPredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
+            var videoPredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.Video.rawValue)
             if let videoFetchPredicate = self.videoFetchPredicate {
                 videoPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [videoPredicate, videoFetchPredicate])
             }
@@ -341,7 +341,7 @@ open class DKImagePickerController : UINavigationController {
         return self.assetFetchOptions
     }
     
-    private func updateCancelButtonForVC(_ vc: UIViewController) {
+    private func updateCancelButtonForVC(vc: UIViewController) {
         if self.showsCancelButton {
             self.UIDelegate.imagePickerController(self, showsCancelButtonForVC: vc)
         } else {
@@ -359,8 +359,8 @@ open class DKImagePickerController : UINavigationController {
             }
         }
         
-        let didFinishCapturingImage = { [unowned self] (image: UIImage?, data: Data?) in
-            let completeBlock: ((_ asset: DKAsset) -> Void) = { asset in
+        let didFinishCapturingImage = { [unowned self] (image: UIImage?, data: NSData?) in
+            let completeBlock: ((asset: DKAsset) -> Void) = { asset in
                 if self.sourceType != .camera {
                     self.dismissCamera()
                 }
@@ -368,7 +368,7 @@ open class DKImagePickerController : UINavigationController {
             }
             
             if let data = data {
-                self.capturingImageData(data, image, completeBlock)
+                self.capturingImageData(data, image: image, completeBlock: completeBlock)
             } else if let image = image {
                 self.capturingImage(image, completeBlock)
             } else {
@@ -376,19 +376,19 @@ open class DKImagePickerController : UINavigationController {
             }
         }
         
-        let didFinishCapturingVideo = { [unowned self] (videoURL: URL) in
+        let didFinishCapturingVideo = { [unowned self] (videoURL: NSURL) in
             var newVideoIdentifier: String!
-            PHPhotoLibrary.shared().performChanges({
-                let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: videoURL)
+            PHPhotoLibrary.sharedPhotoLibrary().performChanges({
+                let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(videoURL)
                 newVideoIdentifier = assetRequest?.placeholderForCreatedAsset?.localIdentifier
             }) { (success, error) in
-                DispatchQueue.main.async(execute: {
+                dispatch_async(dispatch_get_main_queue(), {
                     if success {
-                        if let newAsset = PHAsset.fetchAssets(withLocalIdentifiers: [newVideoIdentifier], options: nil).firstObject {
+                        if let newAsset = PHAsset.fetchAssetsWithLocalIdentifiers([newVideoIdentifier], options: nil).firstObject {
                             if self.sourceType != .camera || self.viewControllers.count == 0 {
                                 self.dismissCamera()
                             }
-                            self.selectImage(DKAsset(originalAsset: newAsset))
+                            self.selectImage(DKAsset(originalAsset: newAsset as! PHAsset))
                         }
                     } else {
                         self.dismissCamera()
@@ -400,15 +400,15 @@ open class DKImagePickerController : UINavigationController {
         let camera = self.UIDelegate.imagePickerControllerCreateCamera(self)
         let cameraProtocol = camera as! DKImagePickerControllerCameraProtocol
         
-        cameraProtocol.setDidCancel(block: didCancel)
-        cameraProtocol.setDidFinishCapturingImage(block: didFinishCapturingImage)
-        cameraProtocol.setDidFinishCapturingVideo(block: didFinishCapturingVideo)
+        cameraProtocol.setDKImagePickerControllerCameraDidCancel(didCancel)
+        cameraProtocol.setDKImagePickerControllerCameraDidFinishCapturingImage(didFinishCapturingImage)
+        cameraProtocol.setDKImagePickerControllerCameraDidFinishCapturingVideo(didFinishCapturingVideo)
         
         return camera
     }
     
     internal func presentCamera() {
-        self.presentCamera(camera: self.createCamera())
+        self.presentCamera(self.createCamera())
     }
     
     internal weak var camera: UIViewController?
@@ -416,59 +416,59 @@ open class DKImagePickerController : UINavigationController {
         self.camera = camera
         
         if self.inline {
-            UIApplication.shared.keyWindow!.rootViewController!.present(camera, animated: true, completion: nil)
+            UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(camera, animated: true, completion: nil)
         } else {
-            self.present(camera, animated: true, completion: nil)
+            self.presentViewController(camera, animated: true, completion: nil)
         }
     }
     
     internal func dismissCamera() {
         if let _ = self.camera {
             if self.inline {
-                UIApplication.shared.keyWindow!.rootViewController!.dismiss(animated: true, completion: nil)
+                UIApplication.sharedApplication().keyWindow!.rootViewController!.dismissViewControllerAnimated(true, completion: nil)
             } else {
-                self.dismiss(animated: true, completion: nil)
+                self.dismissViewControllerAnimated(true, completion: nil)
             }
             self.camera = nil
         }
     }
     
-    open func dismiss() {
-        self.presentingViewController?.dismiss(animated: true, completion: {
+    public func dismiss() {
+        self.presentingViewController?.dismissViewControllerAnimated(true, completion: {
             self.didCancel?()
         })
     }
     
-    open func done() {
-        self.presentingViewController?.dismiss(animated: true, completion: {
-            self.didSelectAssets?(self.selectedAssets)
+    public func done() {
+        self.presentingViewController?.dismissViewControllerAnimated(true, completion: {
+            self.didSelectAssets?(assets: self.selectedAssets)
         })
     }
     
     // MARK:- Capturing Image
     
-    internal func capturingImage(_ image: UIImage, _ completeBlock: @escaping ((_ asset: DKAsset) -> Void)) {
+    internal func capturingImage(image: UIImage, _ completeBlock: ((asset: DKAsset) -> Void)) {
         var newImageIdentifier: String!
         
-        PHPhotoLibrary.shared().performChanges({
-            let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+        PHPhotoLibrary.sharedPhotoLibrary().performChanges({
+            let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(image)
             newImageIdentifier = assetRequest.placeholderForCreatedAsset!.localIdentifier
         }) { (success, error) in
-            DispatchQueue.main.async(execute: {
-                if success, let newAsset = PHAsset.fetchAssets(withLocalIdentifiers: [newImageIdentifier], options: nil).firstObject {
-                    completeBlock(DKAsset(originalAsset: newAsset))
+            dispatch_async(dispatch_get_main_queue(), {
+                if success, let newAsset = PHAsset.fetchAssetsWithLocalIdentifiers([newImageIdentifier], options: nil).firstObject {
+                    completeBlock(asset: DKAsset(originalAsset: newAsset as! PHAsset))
                 } else {
-                    completeBlock(DKAsset(image: image))
+                    completeBlock(asset: DKAsset(image: image))
                 }
             })
             
         }
     }
     
-    internal func capturingImageData(_ data: Data, _ image: UIImage?, _ completeBlock: @escaping ((_ asset: DKAsset) -> Void)) {
-        var metadata: Dictionary<AnyHashable, Any>?
+    internal func capturingImageData(data: NSData, image: UIImage?, completeBlock: ((asset: DKAsset) -> Void)) {
+        var metadata: Dictionary<NSObject, Any>?
         if let source = CGImageSourceCreateWithData(data as CFData, nil) {
-            metadata = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? Dictionary<AnyHashable, Any>
+            metadata = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? Dictionary<NSObject, AnyObject>
         }
         
         var imageData = data
@@ -478,64 +478,64 @@ open class DKImagePickerController : UINavigationController {
         
         if #available(iOS 9.0, *) {
             if let metadata = metadata {
-                if let imageDataWithMetadata = self.writeMetadata(metadata, Into: imageData) {
-                    self.capturingImageDataForiOS9(imageDataWithMetadata, completeBlock)
+                if let imageDataWithMetadata = self.writeMetadata(metadata as! Dictionary<NSObject, AnyObject>, Into: imageData) {
+                    self.capturingImageDataForiOS9(imageDataWithMetadata, completeBlock: completeBlock)
                 } else {
-                    self.capturingImageDataForiOS9(imageData, completeBlock)
+                    self.capturingImageDataForiOS9(imageData, completeBlock: completeBlock)
                 }
             } else {
-                self.capturingImageDataForiOS9(imageData, completeBlock)
+                self.capturingImageDataForiOS9(imageData, completeBlock: completeBlock)
             }
         } else {
-            self.capturingImageDataForiOS8(imageData, metadata, completeBlock)
+            self.capturingImageDataForiOS8(imageData, metadata: metadata, completeBlock: completeBlock)
         }
     }
     
-    internal func capturingImageDataForiOS8(_ data: Data, _ metadata: Dictionary<AnyHashable, Any>?, _ completeBlock: @escaping ((_ asset: DKAsset) -> Void)) {
+    internal func capturingImageDataForiOS8(data: NSData, metadata: Dictionary<NSObject, Any>?, completeBlock: ((asset: DKAsset) -> Void)) {
         let library = ALAssetsLibrary()
-        library.writeImageData(toSavedPhotosAlbum: data, metadata: metadata, completionBlock: { (newURL, error) in
+        library.writeImageDataToSavedPhotosAlbum(data, metadata: metadata as? [NSObject : AnyObject], completionBlock: { (newURL, error) in
             if let _ = error {
-                completeBlock(DKAsset(image: UIImage(data: data)!))
+                completeBlock(asset: DKAsset(image: UIImage(data: data)!))
             } else {
-                if let newAsset = PHAsset.fetchAssets(withALAssetURLs: [newURL!], options: nil).firstObject {
-                    completeBlock(DKAsset(originalAsset: newAsset))
+                if let newAsset = PHAsset.fetchAssetsWithALAssetURLs([newURL!], options: nil).firstObject {
+                    completeBlock(asset: DKAsset(originalAsset: newAsset as! PHAsset))
                 }
             }
         })
     }
     
-    internal func capturingImageDataForiOS9(_ data: Data, _ completeBlock: @escaping ((_ asset: DKAsset) -> Void)) {
+    internal func capturingImageDataForiOS9(data: NSData, completeBlock: ((asset: DKAsset) -> Void)) {
         var newImageIdentifier: String!
         
-        PHPhotoLibrary.shared().performChanges({
+        PHPhotoLibrary.sharedPhotoLibrary().performChanges({
             if #available(iOS 9.0, *) {
-                let assetRequest = PHAssetCreationRequest.forAsset()
-                assetRequest.addResource(with: .photo, data: data, options: nil)
+                let assetRequest = PHAssetCreationRequest.creationRequestForAsset()
+                assetRequest.addResourceWithType(.Photo, data: data, options: nil)
                 newImageIdentifier = assetRequest.placeholderForCreatedAsset!.localIdentifier
             } else {
                 // Fallback on earlier versions
             }
         }) { (success, error) in
-            DispatchQueue.main.async(execute: {
-                if success, let newAsset = PHAsset.fetchAssets(withLocalIdentifiers: [newImageIdentifier], options: nil).firstObject {
-                    completeBlock(DKAsset(originalAsset: newAsset))
+            dispatch_async(dispatch_get_main_queue(), {
+                if success, let newAsset = PHAsset.fetchAssetsWithLocalIdentifiers([newImageIdentifier], options: nil).firstObject {
+                    completeBlock(asset: DKAsset(originalAsset: newAsset as! PHAsset))
                 } else {
-                    completeBlock(DKAsset(image: UIImage(data: data)!))
+                    completeBlock(asset: DKAsset(image: UIImage(data: data)!))
                 }
             })
             
         }
     }
     
-    internal func writeMetadata(_ metadata: Dictionary<AnyHashable, Any>, Into imageData: Data) -> Data? {
+    internal func writeMetadata(metadata: Dictionary<NSObject, AnyObject>, Into imageData: NSData) -> NSData? {
         let source = CGImageSourceCreateWithData(imageData as CFData, nil)!
         let UTI = CGImageSourceGetType(source)!
         
         let newImageData = NSMutableData()
         if let destination = CGImageDestinationCreateWithData(newImageData, UTI, 1, nil) {
-            CGImageDestinationAddImageFromSource(destination, source, 0, metadata as CFDictionary)
+            CGImageDestinationAddImageFromSource(destination, source, 0, metadata as NSDictionary)
             if CGImageDestinationFinalize(destination) {
-                return newImageData as Data
+                return newImageData as NSData
             } else {
                 return nil
             }
@@ -546,19 +546,19 @@ open class DKImagePickerController : UINavigationController {
     
     // MARK: - Selection
     
-    public func selectImage(atIndexPath index: IndexPath) {
+    public func selectImage(atIndexPath index: NSIndexPath) {
         if let rootVC = self.viewControllers.first as? DKAssetGroupDetailVC {
             rootVC.selectAsset(atIndex: index)
             rootVC.collectionView?.reloadData()
         }
     }
     
-    public func deselectAssetAtIndex(_ index: Int) {
+    public func deselectAssetAtIndex(index: Int) {
         let asset = self.selectedAssets[index]
         self.deselectAsset(asset)
     }
     
-    public func deselectAsset(_ asset: DKAsset) {
+    public func deselectAsset(asset: DKAsset) {
         self.deselectImage(asset)
         if let rootVC = self.viewControllers.first as? DKAssetGroupDetailVC {
             rootVC.collectionView?.reloadData()
@@ -577,7 +577,7 @@ open class DKImagePickerController : UINavigationController {
         }
     }
     
-    internal func selectImage(_ asset: DKAsset) {
+    internal func selectImage(asset: DKAsset) {
         if self.singleSelect {
             self.deselectAllAssets()
             self.selectedAssets.append(asset)
@@ -597,8 +597,8 @@ open class DKImagePickerController : UINavigationController {
         }
     }
     
-    internal func deselectImage(_ asset: DKAsset) {
-        self.selectedAssets.remove(at: selectedAssets.index(of: asset)!)
+    internal func deselectImage(asset: DKAsset) {
+        self.selectedAssets.removeAtIndex(selectedAssets.indexOf(asset)!)
         self.UIDelegate.imagePickerController(self, didDeselectAssets: [asset])
         self.triggerSelectedChanged()
     }
@@ -611,15 +611,15 @@ open class DKImagePickerController : UINavigationController {
     
     // MARK: - Handles Orientation
     
-    open override var shouldAutorotate : Bool {
+    public override func shouldAutorotate() -> Bool {
         return self.allowsLandscape && self.sourceType != .camera ? true : false
     }
     
-    open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+    public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
         if self.allowsLandscape {
-            return super.supportedInterfaceOrientations
+            return super.supportedInterfaceOrientations()
         } else {
-            return UIInterfaceOrientationMask.portrait
+            return UIInterfaceOrientationMask.Portrait
         }
     }
 }

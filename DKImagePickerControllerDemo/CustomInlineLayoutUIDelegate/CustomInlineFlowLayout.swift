@@ -8,12 +8,12 @@
 
 import UIKit
 
-open class CustomInlineFlowLayout: UICollectionViewFlowLayout {
+public class CustomInlineFlowLayout: UICollectionViewFlowLayout {
     
-    open override func prepare() {
-        super.prepare()
+    public override func prepareLayout() {
+        super.prepareLayout()
         
-        self.scrollDirection = .horizontal
+        self.scrollDirection = .Horizontal
         
         let contentWidth = self.collectionView!.bounds.width / 3.5
         let contentHeight = self.collectionView!.bounds.height

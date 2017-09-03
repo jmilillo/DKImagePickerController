@@ -9,12 +9,12 @@
 import UIKit
 
 @objc
-open class DKPermissionView: UIView {
+public class DKPermissionView: UIView {
 	
 	private let titleLabel = UILabel()
 	private let permitButton = UIButton()
 	
-	open class func permissionView(_ style: DKImagePickerControllerSourceType) -> DKPermissionView {
+	public class func permissionView(style: DKImagePickerControllerSourceType) -> DKPermissionView {
 		
 		let permissionView = DKPermissionView()
 		permissionView.addSubview(permissionView.titleLabel)
@@ -22,17 +22,17 @@ open class DKPermissionView: UIView {
 		
 		if style == .photo {
 			permissionView.titleLabel.text = DKImageLocalizedStringWithKey("permissionPhoto")
-			permissionView.titleLabel.textColor = UIColor.gray
+			permissionView.titleLabel.textColor = UIColor.grayColor()
 		} else {
-			permissionView.titleLabel.textColor = UIColor.white
+			permissionView.titleLabel.textColor = UIColor.whiteColor()
 			permissionView.titleLabel.text = DKImageLocalizedStringWithKey("permissionCamera")
 		}
 		permissionView.titleLabel.sizeToFit()
 		
-		permissionView.permitButton.setTitle(DKImageLocalizedStringWithKey("permit"), for: .normal)
-		permissionView.permitButton.setTitleColor(UIColor(red: 0, green: 122.0 / 255, blue: 1, alpha: 1), for: .normal)
-		permissionView.permitButton.addTarget(permissionView, action: #selector(DKPermissionView.gotoSettings), for: .touchUpInside)
-		permissionView.permitButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+		permissionView.permitButton.setTitle(DKImageLocalizedStringWithKey("permit"), forState: .Normal)
+		permissionView.permitButton.setTitleColor(UIColor(red: 0, green: 122.0 / 255, blue: 1, alpha: 1), forState: .Normal)
+		permissionView.permitButton.addTarget(permissionView, action: #selector(DKPermissionView.gotoSettings), forControlEvents: .TouchUpInside)
+		permissionView.permitButton.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
 		permissionView.permitButton.sizeToFit()
 		permissionView.permitButton.center = CGPoint(x: permissionView.titleLabel.center.x,
 			y: permissionView.titleLabel.bounds.height + 40)
@@ -43,15 +43,15 @@ open class DKPermissionView: UIView {
 		return permissionView
 	}
 	
-	open override func didMoveToWindow() {
+	public override func didMoveToWindow() {
 		super.didMoveToWindow()
 		
 		self.center = self.superview!.center
 	}
 	
-	open func gotoSettings() {
-		if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
-			UIApplication.shared.openURL(appSettings)
+	public func gotoSettings() {
+		if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
+			UIApplication.sharedApplication().openURL(appSettings)
 		}
 	}
 	

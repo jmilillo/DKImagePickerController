@@ -19,8 +19,8 @@ class CustomGroupDetailCameraCell: DKAssetGroupDetailBaseCell {
         
         let cameraLabel = UILabel(frame: frame)
         cameraLabel.text = "Camera"
-        cameraLabel.textAlignment = .center
-        cameraLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cameraLabel.textAlignment = .Center
+        cameraLabel.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         self.contentView.addSubview(cameraLabel)
     }
     

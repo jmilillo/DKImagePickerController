@@ -10,10 +10,10 @@ import UIKit
 
 class DKImagePickerControllerDemoVC: UITableViewController {
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         let cell = sender as! UITableViewCell
         
-        let destination = segue.destination as! ViewController
+        let destination = segue.destinationViewController as! ViewController
         destination.title = cell.textLabel?.text
         
         switch segue.identifier! {
@@ -69,7 +69,7 @@ class DKImagePickerControllerDemoVC: UITableViewController {
         case "Camera Customization":
             let pickerController = DKImagePickerController()
             pickerController.UIDelegate = CustomCameraUIDelegate()
-            pickerController.modalPresentationStyle = .overCurrentContext
+            pickerController.modalPresentationStyle = .OverCurrentContext
             
             destination.pickerController = pickerController
             

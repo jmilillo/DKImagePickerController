@@ -18,8 +18,8 @@ class DKAssetGroupDetailCameraCell: DKAssetGroupDetailBaseCell {
         super.init(frame: frame)
         
         let cameraImageView = UIImageView(frame: self.bounds)
-        cameraImageView.contentMode = .center
-        cameraImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cameraImageView.contentMode = .Center
+        cameraImageView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         cameraImageView.image = DKImageResource.cameraImage()
         self.contentView.addSubview(cameraImageView)
         

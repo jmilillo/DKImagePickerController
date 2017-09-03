@@ -9,12 +9,12 @@
 import UIKit
 
 @objc
-open class DKAssetGroupDetailBaseCell: UICollectionViewCell, DKAssetGroupCellItemProtocol {
+public class DKAssetGroupDetailBaseCell: UICollectionViewCell, DKAssetGroupCellItemProtocol {
     
     // This method must be overridden
-    open class func cellReuseIdentifier() -> String { preconditionFailure("This method must be overridden") }
+    public class func cellReuseIdentifier() -> String { preconditionFailure("This method must be overridden") }
     
-    open weak var asset: DKAsset?
-    open var index: Int = 0
-    open var thumbnailImage: UIImage!
+    public weak var asset: DKAsset?
+    public var index: Int = 0
+    public var thumbnailImage: UIImage!
 }

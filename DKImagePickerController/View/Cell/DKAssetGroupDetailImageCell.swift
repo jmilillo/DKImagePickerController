@@ -18,14 +18,14 @@ class DKAssetGroupDetailImageCell: DKAssetGroupDetailBaseCell {
         super.init(frame: frame)
         
         self.thumbnailImageView.frame = self.bounds
-        self.thumbnailImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.thumbnailImageView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         self.contentView.addSubview(self.thumbnailImageView)
         
         self.checkView.frame = self.bounds
-        self.checkView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.checkView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         self.checkView.checkImageView.tintColor = nil
-        self.checkView.checkLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        self.checkView.checkLabel.textColor = UIColor.white
+        self.checkView.checkLabel.font = UIFont.boldSystemFontOfSize(14)
+        self.checkView.checkLabel.textColor = UIColor.whiteColor()
         self.contentView.addSubview(self.checkView)
     }
     
@@ -36,13 +36,13 @@ class DKAssetGroupDetailImageCell: DKAssetGroupDetailBaseCell {
     class DKImageCheckView: UIView {
         
         internal lazy var checkImageView: UIImageView = {
-            let imageView = UIImageView(image: DKImageResource.checkedImage().withRenderingMode(.alwaysTemplate))
+            let imageView = UIImageView(image: DKImageResource.checkedImage().imageWithRenderingMode(.AlwaysTemplate))
             return imageView
         }()
         
         internal lazy var checkLabel: UILabel = {
             let label = UILabel()
-            label.textAlignment = .right
+            label.textAlignment = .Right
             
             return label
         }()
@@ -78,19 +78,19 @@ class DKAssetGroupDetailImageCell: DKAssetGroupDetailBaseCell {
         }
     }
     
-    fileprivate lazy var thumbnailImageView: UIImageView = {
+    lazy var thumbnailImageView: UIImageView = {
         let thumbnailImageView = UIImageView()
-        thumbnailImageView.contentMode = .scaleAspectFill
+        thumbnailImageView.contentMode = .ScaleAspectFill
         thumbnailImageView.clipsToBounds = true
         
         return thumbnailImageView
     }()
     
-    fileprivate let checkView = DKImageCheckView()
+    let checkView = DKImageCheckView()
     
-    override var isSelected: Bool {
+    override var selected: Bool {
         didSet {
-            checkView.isHidden = !super.isSelected
+            checkView.hidden = !super.selected
         }
     }
     
