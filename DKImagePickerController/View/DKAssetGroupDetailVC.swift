@@ -292,7 +292,7 @@ public class DKAssetGroupDetailVC: UIViewController, UICollectionViewDelegate, U
         return cell
     }
     
-    public func collectionView(collectionView: UICollectionView, shouldSelectItemAt indexPath: NSIndexPath) -> Bool {
+    public func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         if let firstSelectedAsset = self.imagePickerController.selectedAssets.first,
             let selectedAsset = (collectionView.cellForItemAtIndexPath(indexPath) as? DKAssetGroupDetailBaseCell)?.asset where self.imagePickerController.allowMultipleTypes == false && firstSelectedAsset.isVideo != selectedAsset.isVideo {
 
@@ -314,7 +314,7 @@ public class DKAssetGroupDetailVC: UIViewController, UICollectionViewDelegate, U
 		return shouldSelect
     }
     
-    public func collectionView(collectionView: UICollectionView, didSelectItemAt indexPath: NSIndexPath) {
+    public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if self.isCameraCell(indexPath) {
             collectionView .deselectItemAtIndexPath(indexPath, animated: false)
             if UIImagePickerController.isSourceTypeAvailable(.Camera) {
@@ -325,8 +325,7 @@ public class DKAssetGroupDetailVC: UIViewController, UICollectionViewDelegate, U
         }
     }
     
-    public func collectionView(collectionView: UICollectionView, didDeselectItemAt indexPath: NSIndexPath) {
-        
+    public func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
 		if let removedAsset = (collectionView.cellForItemAtIndexPath(indexPath) as? DKAssetGroupDetailBaseCell)?.asset {
 			let removedIndex = self.imagePickerController.selectedAssets.indexOf(removedAsset)!
 			
