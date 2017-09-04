@@ -96,20 +96,20 @@ public class DKImageManager: DKBaseManager {
         _groupDataManager = nil
 	}
 	
-	public func fetchImageForAsset(asset: DKAsset, size: CGSize, completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchImageForAsset(asset: DKAsset, size: CGSize, completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		self.fetchImageForAsset(asset, size: size, options: nil, completeBlock: completeBlock)
 	}
 	
-	public func fetchImageForAsset(asset: DKAsset, size: CGSize, contentMode: PHImageContentMode, completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchImageForAsset(asset: DKAsset, size: CGSize, contentMode: PHImageContentMode, completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 			self.fetchImageForAsset(asset, size: size, options: nil, contentMode: contentMode, completeBlock: completeBlock)
 	}
 
-	public func fetchImageForAsset(asset: DKAsset, size: CGSize, options: PHImageRequestOptions?, completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchImageForAsset(asset: DKAsset, size: CGSize, options: PHImageRequestOptions?, completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		self.fetchImageForAsset(asset, size: size, options: options, contentMode: .AspectFill, completeBlock: completeBlock)
 	}
 	
 	public func fetchImageForAsset(asset: DKAsset, size: CGSize, options: PHImageRequestOptions?, contentMode: PHImageContentMode,
-	                               completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	                               completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
             let options = (options ?? self.defaultImageRequestOptions).copy() as! PHImageRequestOptions
 
             self.manager.requestImageForAsset(asset.originalAsset!,
@@ -126,7 +126,7 @@ public class DKImageManager: DKBaseManager {
             }
 	}
 	
-	public func fetchImageDataForAsset(asset: DKAsset, options: PHImageRequestOptions?, completeBlock: (data: NSData?, info: [NSObject: Any]?) -> Void) {
+	public func fetchImageDataForAsset(asset: DKAsset, options: PHImageRequestOptions?, completeBlock: (data: NSData?, info: [NSObject: AnyObject]?) -> Void) {
         self.manager.requestImageDataForAsset(asset.originalAsset!,
                                               options: options ?? self.defaultImageRequestOptions) { (data, dataUTI, orientation, info) in
                                                 if let isInCloud = info?[PHImageResultIsInCloudKey] as AnyObject?
@@ -140,11 +140,11 @@ public class DKImageManager: DKBaseManager {
         }
 	}
 	
-	public func fetchAVAsset(asset: DKAsset, completeBlock: (avAsset: AVAsset?, info: [NSObject: Any]?) -> Void) {
+	public func fetchAVAsset(asset: DKAsset, completeBlock: (avAsset: AVAsset?, info: [NSObject: AnyObject]?) -> Void) {
 		self.fetchAVAsset(asset, options: nil, completeBlock: completeBlock)
 	}
 	
-	public func fetchAVAsset(asset: DKAsset, options: PHVideoRequestOptions?, completeBlock: (avAsset: AVAsset?, info: [NSObject: Any]?) -> Void) {
+	public func fetchAVAsset(asset: DKAsset, options: PHVideoRequestOptions?, completeBlock: (avAsset: AVAsset?, info: [NSObject: AnyObject]?) -> Void) {
         self.manager.requestAVAssetForVideo(asset.originalAsset!,
                                             options: options ?? self.defaultVideoRequestOptions) { avAsset, audioMix, info in
                                                 if let isInCloud = info?[PHImageResultIsInCloudKey] as AnyObject?

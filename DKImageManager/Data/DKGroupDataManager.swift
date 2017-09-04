@@ -83,7 +83,7 @@ public class DKGroupDataManager: DKBaseManager, PHPhotoLibraryChangeObserver {
 		return self.groups![groupId]!
 	}
 	
-	public func fetchGroupThumbnailForGroup(groupId: String, size: CGSize, options: PHImageRequestOptions, completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchGroupThumbnailForGroup(groupId: String, size: CGSize, options: PHImageRequestOptions, completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		let group = self.fetchGroupWithGroupId(groupId)
 		if group.totalCount == 0 {
 			completeBlock(image: nil, info: nil)

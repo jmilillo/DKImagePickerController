@@ -22,7 +22,7 @@ public extension CGSize {
 public class DKAsset: NSObject {
 
 	/// Returns a UIImage that is appropriate for displaying full screen.
-	private var fullScreenImage: (image: UIImage?, info: [NSObject: Any]?)?
+	private var fullScreenImage: (image: UIImage?, info: [NSObject: AnyObject]?)?
 	
 	/// When the asset was an image, it's false. Otherwise true.
 	public private(set) var isVideo: Bool = false
@@ -67,15 +67,15 @@ public class DKAsset: NSObject {
         return false
     }
 	
-	public func fetchImageWithSize(size: CGSize, completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchImageWithSize(size: CGSize, completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		self.fetchImageWithSize(size, options: nil, completeBlock: completeBlock)
 	}
 	
-	public func fetchImageWithSize(size: CGSize, options: PHImageRequestOptions?, completeBlock:(image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchImageWithSize(size: CGSize, options: PHImageRequestOptions?, completeBlock:(image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		self.fetchImageWithSize(size, options: options, contentMode: .AspectFit, completeBlock: completeBlock)
 	}
 	
-	public func fetchImageWithSize(size: CGSize, options: PHImageRequestOptions?, contentMode: PHImageContentMode, completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchImageWithSize(size: CGSize, options: PHImageRequestOptions?, contentMode: PHImageContentMode, completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		if let _ = self.originalAsset {
 			getImageManager().fetchImageForAsset(self, size: size, options: options, contentMode: contentMode, completeBlock: completeBlock)
 		} else {
@@ -83,7 +83,7 @@ public class DKAsset: NSObject {
 		}
 	}
 	
-	public func fetchFullScreenImageWithCompleteBlock(completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchFullScreenImageWithCompleteBlock(completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		self.fetchFullScreenImage(false, completeBlock: completeBlock)
 	}
 	
@@ -93,7 +93,7 @@ public class DKAsset: NSObject {
      - parameter sync:          If true, the method blocks the calling thread until image is ready or an error occurs.
      - parameter completeBlock: The block is executed when the image download is complete.
 	*/
-	public func fetchFullScreenImage(sync: Bool, completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchFullScreenImage(sync: Bool, completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		if let (image, info) = self.fullScreenImage {
 			completeBlock(image: image, info: info)
 		} else {
@@ -113,7 +113,7 @@ public class DKAsset: NSObject {
 		}
 	}
 	
-	public func fetchOriginalImageWithCompleteBlock(completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchOriginalImageWithCompleteBlock(completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
 		self.fetchOriginalImage(false, completeBlock: completeBlock)
 	}
 	
@@ -123,7 +123,7 @@ public class DKAsset: NSObject {
      - parameter sync:          If true, the method blocks the calling thread until image is ready or an error occurs.
      - parameter completeBlock: The block is executed when the image download is complete.
 	*/
-	public func fetchOriginalImage(sync: Bool, completeBlock: (image: UIImage?, info: [NSObject: Any]?) -> Void) {
+	public func fetchOriginalImage(sync: Bool, completeBlock: (image: UIImage?, info: [NSObject: AnyObject]?) -> Void) {
         if let _ = self.originalAsset {
             let options = PHImageRequestOptions()
             options.version = .Current
@@ -147,7 +147,7 @@ public class DKAsset: NSObject {
      - parameter sync:          If true, the method blocks the calling thread until image is ready or an error occurs.
      - parameter completeBlock: The block is executed when the image download is complete.
      */
-    public func fetchImageDataForAsset(sync: Bool, completeBlock: (imageData: NSData?, info: [NSObject: Any]?) -> Void) {
+    public func fetchImageDataForAsset(sync: Bool, completeBlock: (imageData: NSData?, info: [NSObject: AnyObject]?) -> Void) {
         let options = PHImageRequestOptions()
         options.version = .Current
         options.synchronous = sync
@@ -160,21 +160,21 @@ public class DKAsset: NSObject {
     /**
      Fetch an AVAsset with a completeBlock.
 	*/
-	public func fetchAVAssetWithCompleteBlock(completeBlock: (AVAsset: AVAsset?, info: [NSObject: Any]?) -> Void) {
+	public func fetchAVAssetWithCompleteBlock(completeBlock: (AVAsset: AVAsset?, info: [NSObject: AnyObject]?) -> Void) {
 		self.fetchAVAsset(nil, completeBlock: completeBlock)
 	}
 	
     /**
      Fetch an AVAsset with a completeBlock and PHVideoRequestOptions.
      */
-	public func fetchAVAsset(options: PHVideoRequestOptions?, completeBlock: (AVAsset: AVAsset?, info: [NSObject: Any]?) -> Void) {
+	public func fetchAVAsset(options: PHVideoRequestOptions?, completeBlock: (AVAsset: AVAsset?, info: [NSObject: AnyObject]?) -> Void) {
 		getImageManager().fetchAVAsset(self, options: options, completeBlock: completeBlock)
 	}
 	
     /**
      Sync fetch an AVAsset with a completeBlock and PHVideoRequestOptions.
      */
-	public func fetchAVAsset(sync: Bool, options: PHVideoRequestOptions?, completeBlock: (AVAsset: AVAsset?, info: [NSObject: Any]?) -> Void) {
+	public func fetchAVAsset(sync: Bool, options: PHVideoRequestOptions?, completeBlock: (AVAsset: AVAsset?, info: [NSObject: AnyObject]?) -> Void) {
 		if sync {
 			let semaphore = dispatch_semaphore_create(0)
 			self.fetchAVAsset(options, completeBlock: { (AVAsset, info) -> Void in
