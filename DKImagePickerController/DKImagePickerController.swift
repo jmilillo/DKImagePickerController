@@ -234,6 +234,9 @@ open class DKImagePickerController : UINavigationController {
             }
         }
     }
+
+    /// Colors applied to the permission view when access needs to be granted by the user
+    public var permissionViewColors = DKPermissionViewColors()
     
     open private(set) var selectedAssets = [DKAsset]()
     
