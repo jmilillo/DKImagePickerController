@@ -99,6 +99,9 @@ open class DKImagePickerController: UINavigationController, DKBaseManagerObserve
     @objc public var exportsWhenCompleted = false
     
     @objc public var exporter: DKImageAssetExporter?
+
+    /// Colors applied to the permission view when access needs to be granted by the user
+    public var permissionViewColors = DKPermissionViewColors()
     
     /// Indicates the status of the exporter.
     @objc public private(set) var exportStatus = DKImagePickerControllerExportStatus.none {
